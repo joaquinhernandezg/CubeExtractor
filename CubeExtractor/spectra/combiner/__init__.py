@@ -1,0 +1,1 @@
+from .base_combiner import SimpleCubeSpectraCombiner

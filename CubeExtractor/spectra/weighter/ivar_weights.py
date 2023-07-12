@@ -2,7 +2,6 @@ import numpy as np
 from .base_weights import BaseWeights
 
 
-
 class IVarWeights(BaseWeights):
 
     @classmethod

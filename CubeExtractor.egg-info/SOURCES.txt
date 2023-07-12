@@ -1,0 +1,8 @@
+README.md
+setup.py
+CubeExtractor.egg-info/PKG-INFO
+CubeExtractor.egg-info/SOURCES.txt
+CubeExtractor.egg-info/dependency_links.txt
+CubeExtractor.egg-info/entry_points.txt
+CubeExtractor.egg-info/requires.txt
+CubeExtractor.egg-info/top_level.txt

@@ -1,5 +1,7 @@
 from .base_extractor import ApertureExtractor
+from ..combiner import SimpleCubeSpectraCombiner
 
+import numpy as np
 
 class MaskExtractor(ApertureExtractor):
     @classmethod

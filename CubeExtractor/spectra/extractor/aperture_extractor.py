@@ -18,8 +18,6 @@ class CircularApertureExtractor(ApertureExtractor):
         for ra, dec in zip(ra_list, dec_list):
 
             r = min_axis_size_arcsec/3600
-            pos_angle = 0
-            pos_angle =0
 
             aperture = cls.get_aperture(min_axis_size_arcsec=min_axis_size_arcsec, aperture_factor=aperture_factor, ra=ra, dec=dec)
             apertures.append(aperture)

@@ -29,6 +29,8 @@ setuptools.setup(
     entry_points={
                         'console_scripts': [
                                 'cube_extract=CubeExtractor.bin.cube_extract:ExtractSpectraFromCubeScript.entry_point',
+                                'cube_plot_apertures=CubeExtractor.bin.plot_apertures:PlotAperturesScript.entry_point',
+                                'cube_make_white=CubeExtractor.bin.make_white_image:MakeWhiteImageScript.entry_point'
                                ]
                 }
 )

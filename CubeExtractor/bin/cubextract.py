@@ -1,17 +1,15 @@
-from ast import parse
 from .scriptbase import ScriptBase
-import os
-import glob
-import numpy as np
-from astropy.io import fits
-from mpdaf.obj import Cube, Image
-from astropy.table import Table
-import matplotlib.pyplot as plt
-from joaco_science.spectra.aperture_extractor import SinglePixelExtractor, CircularApertureExtractor, EllipticalApertureExtractor, MaskExtractor
-from joaco_science.spectra.formats import MarzConverter, RedMonsterConverter, LinetoolsConverter
-from joaco_science.spectra.utils import extract_spectra_from_catalog, plot_apertures
+from CubeExtractor.spectra.extractor import (CircularApertureExtractor,
+                                        EllipticalApertureExtractor,
+                                        MaskExtractor)
+from CubeExtractor.utils.batch_extract import extract_batch_spectra, write_cutouts
 import argparse
-from astropy.visualization import simple_norm, ZScaleInterval
+import os
+
+from astropy.table import Table
+from astropy.io import fits
+
+
 
 import logging
 logging.basicConfig(level = logging.INFO)
@@ -33,8 +31,10 @@ class ExtractSpectraFromCubeScript(ScriptBase):
 
 
         parser.add_argument("--cube_filename", type=str, help="Cube filename")
-        parser.add_argument("--white_image_filename", default=None, type=str, help="White image of the cube")
+        parser.add_argument("--white_image_filename", type=str, help="White image of the cube")
+
         parser.add_argument("--sextractor_catalog_filename", type=str, help="Sextractor catalog filename")
+        parser.add_argument("--skip_exceptions", type=str2bool, help="If True, skips exceptions and just logs them")
 
         parser.add_argument("--aperture_type", type=str, default="elliptical", help="Aperture type")
         parser.add_argument("--combine_method", type=str, default="sum", help="Combination function")
@@ -55,7 +55,6 @@ class ExtractSpectraFromCubeScript(ScriptBase):
         parser.add_argument("--only_first_n", type=int, default=-1, help="First n ids to extract")
 
         parser.add_argument("--out_cutouts_dir", type=str, default=None, help="cutouts directory")
-        parser.add_argument("--plot_regions", type=str2bool, default=True, help="make a plot overlying segmentation masks and apertures")
         parser.add_argument("--cut_edges_segmentation", type=int, default=10, help="trim edges of segmentation mask")
 
 
@@ -72,6 +71,8 @@ class ExtractSpectraFromCubeScript(ScriptBase):
         # checks if the cube exists
         if not os.path.exists(args.cube_filename):
             raise ValueError("Cube filename {} does not exist".format(args.cube_filename))
+        if not os.path.exists(args.white_image_filename):
+            raise ValueError("White image filename {} does not exist".format(args.cube_filename))
         # checks if the catalog exists
         if not os.path.exists(args.sextractor_catalog_filename):
             raise ValueError("Sextractor catalog filename {} does not exist".format(args.sextractor_catalog_filename))
@@ -88,9 +89,7 @@ class ExtractSpectraFromCubeScript(ScriptBase):
             aperture_extractor = EllipticalApertureExtractor
         elif args.aperture_type == "circular":
             aperture_extractor = CircularApertureExtractor
-        elif args.aperture_type == "single_pixel":
-            aperture_extractor = SinglePixelExtractor
-        elif args.aperture_type == "None":
+        elif args.aperture_type == "segmentation":
             aperture_extractor = MaskExtractor
         else:
             raise ValueError("Aperture type {} is not supported".format(args.aperture_type))
@@ -98,62 +97,22 @@ class ExtractSpectraFromCubeScript(ScriptBase):
 
         # reads the cube
         logging.info(f"Reading Cube: {args.cube_filename}")
-        cube = Cube(args.cube_filename)
 
         # if the white image is passed, plot the segmentation mask and/or the
         # defines apertures over the white image
-
-        segmentation_mask = None
-        if args.segmentation_mask is not None:
-            segmentation_mask = fits.getdata(args.segmentation_mask)
-            ny, nx = segmentation_mask.shape
-            #fill a n pixel edges with zeros
-            n = args.cut_edges_segmentation
-            segmentation_mask[0:n, :] = 0
-            segmentation_mask[-n:, :] = 0
-            segmentation_mask[:, 0:n] = 0
-            segmentation_mask[:, -n:] = 0
-
-        white = None
-        if args.white_image_filename:
-            white = Image(args.white_image_filename)
-
-        if args.plot_regions:
-            logging.info(f"Plotting regions: {args.white_image_filename}")
-
-            fig, ax = plot_apertures(white, catalog, ra_column=args.ra_column,dec_column=args.dec_column,
-                                     id_column=args.id_column, aperture_extractor=aperture_extractor,
-                                     segmentation_mask=segmentation_mask)
-            plt.show()
-
-
         if args.only_first_n > 0:
             catalog = catalog[0:args.only_first_n]
         # extract the spectra
-        spectra = extract_spectra_from_catalog(cube=cube, white=white, sources_catalog=catalog, aperture_extractor=aperture_extractor,
-                                               combine_method=args.combine_method,
-                                               weight_method=args.weight_method, ra_column=args.ra_column,
-                                               dec_column=args.dec_column, id_column=args.id_column,
-                                               segmentation_mask=segmentation_mask)
+        spectra = extract_batch_spectra(cube_filename=args.cube_filename, white_filename=args.white_image_filename,
+                                        catalog_filename=args.sextractor_catalog_filename,
+                                        aperture_extractor=aperture_extractor, combine_method=args.combine_method,
+                                        weight_method=args.weight_method, ra_column=args.ra_column,
+                                        dec_column=args.dec_column, id_column=args.id_column,
+                                        segmentation_mask_filename=args.segmentation_mask,
+                                        skip_exceptions=args.skip_exceptions,)
 
         if args.out_cutouts_dir is not None:
-            if not os.path.exists(args.out_cutouts_dir):
-                os.makedirs(args.out_cutouts_dir)
-
-            for spec in spectra:
-                hdul = fits.HDUList()
-                white = spec.white_cutout.data
-                mask = spec.mask_cutout
-                weight = spec.weight_cutout
-                hdul.append(fits.PrimaryHDU())
-                if white is not None:
-                    hdul.append(fits.ImageHDU(np.array(white)))
-                if mask is not None:
-                    hdul.append(fits.ImageHDU(np.array(mask)))
-                if weight is not None:
-                    hdul.append(fits.ImageHDU(np.array(weight)))
-
-                hdul.writeto(os.path.join(args.out_cutouts_dir, str(spec.primary_header["ID_OBJ"]).zfill(4) + ".fits"), overwrite=args.overwrite_all)
+            write_cutouts(spectra, args.out_cutouts_dir, overwrite=args.overwrite_all)
 
 
         if args.marz_spectra_outfile:

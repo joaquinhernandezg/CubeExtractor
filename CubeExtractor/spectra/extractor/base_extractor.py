@@ -1,85 +1,8 @@
 from mpdaf.obj import Image
 import matplotlib.pyplot as plt
 import numpy as np
-from astropy.visualization import ZScaleInterval
-from .spectra_combiner import SimpleCubeSpectraCombiner
 
-
-class SpectrumExtractor:
-    @staticmethod
-    def subcube_from_mask(cube, mask):
-        """Extract a subcube from a cube given a mask.
-        It is assumed that the mask is a boolean array with the same shape as the cube.
-        The mask is assumed to have only one object masked of an arbitrary shape, and
-        the masked object edges are used to extract the subcube.
-
-        Parameters
-        ----------
-        cube : np.ndarray or mpdaf.obj.Cube
-            Cube from wich the subcube is extracted.
-        mask : np.ndarray
-            2D boolean array with the same shape as the cube.
-
-        Returns
-        -------
-        np.ndarray or mpdaf.obj.Cube
-            The extracted subcube
-        """
-        if mask is None:
-            return cube
-
-        where = np.array(np.where(mask))
-
-        y1, x1 = np.amin(where, axis=1)
-        y2, x2 = np.amax(where, axis=1)
-
-        subcube = cube[:, y1:y2+1, x1:x2+1]
-        subcube.mask = np.tile(np.logical_not(mask[y1:y2+1, x1:x2+1]), (cube.shape[0], 1, 1))
-        return subcube
-
-    @classmethod
-    def extract(cls, cube, ra, dec, spectrum_id, combine_method="sum", weight_method=None, mask=None):
-        """Extract a single spectra from a IFU cube
-
-        Parameters
-        ----------
-        cube : mpdaf.obj.Cube
-            MUSE cube from where to extract the spectra.
-            Should have a data and var attributes, and a correct WCS.
-        ra : float
-            Right Ascencion of the source, in degrees.
-        dec : float
-            Declination of the source, in degrees.
-        spectrum_id : int
-            ID of the source to extract.
-        combine_method : str, optional
-           Method to combine the spectra in the defined region, by default "sum".
-           Can be "mean", "median", "sum".
-        weight_method : float, optional
-            Weigthing algorithm to calculate the weights of each spaxel
-            in the defind region, by default None. Can be None (equal weights),
-            snr, flux, ivar.
-        mask : numpy.array, optional
-            2D Mask defining the region of the spaxels to combine in the cube.
-            , by default None. If passed, only the spaxels at mask==1 are considered
-            in the spaxel combination. If None, all the spaxels are taken into account.
-
-        Returns
-        -------
-        _type_
-            _description_
-        """
-        subcube = cls.subcube_from_mask(cube, mask)
-        spec = SimpleCubeSpectraCombiner.combine(subcube, combine_method=combine_method, weighter=weight_method)
-        if spec is None:
-            return None
-        spec.primary_header["RA_OBJ"] = ra
-        spec.primary_header["DEC_OBJ"] = dec
-        spec.primary_header["ID_OBJ"] = spectrum_id
-        return spec
-
-
-
+from ..combiner.base_combiner import SimpleCubeSpectraCombiner
 
 class ApertureExtractor:
     @staticmethod
@@ -199,7 +122,7 @@ class ApertureExtractor:
 
 
     @classmethod
-    def build_mask(self, cube, sky_aperture=None, segmentation_mask=None):
+    def build_mask(cls, cube, sky_aperture=None, segmentation_mask=None):
         """Generate a mask with the same shape a the cube slices.
         The mask is 1 where the spaxels are to be considered and 0 where they are not.
         Mask is constructed from the sky_aperture and the segmentation_mask.
@@ -325,59 +248,3 @@ class ApertureExtractor:
     @classmethod
     def get_aperture(cls, ra, dec, *args, **kwargs):
         raise NotImplementedError("Not supported yet")
-
-
-
-class ApertureExtractor:
-    @staticmethod
-    def subwhite_from_mask(white, mask, segmentation_mask=None):
-        """Extract a subcube from a cube given a mask.
-        It is assumed that the mask is a boolean array with the same shape as the cube.
-        The mask is assumed to have only one object masked of an arbitrary shape, and
-        the masked object edges are used to extract the subcube.
-
-        Parameters
-        ----------
-        cube : np.ndarray or mpdaf.obj.Cube
-            Cube from wich the subcube is extracted.
-        mask : np.ndarray
-            2D boolean array with the same shape as the cube.
-
-        Returns
-        -------
-        np.ndarray or mpdaf.obj.Cube
-            The extracted subcube
-        """
-        if segmentation_mask is not None:
-            mask *= segmentation_mask
-
-        where = np.array(np.where(mask))
-
-        y1, x1 = np.amin(where, axis=1)
-        y2, x2 = np.amax(where, axis=1)
-
-        subwhite = white[y1:y2+1, x1:x2+1]
-        return subwhite
-
-
-    @classmethod
-    def subwhite(cls, white, aperture=None, segmentation_mask=None):
-        """Extract a subcube based on an aperture. The aperture is a pixel aperture
-        from photutils.aperture.Aperture.PixelAperture. The subcube is extracted
-        based on the mask edges of the aperture.
-
-        Parameters
-        ----------
-        cube : np.ndarray or mpdaf.obj.Cube
-            Cube from wich the subcube is extracted.
-        aperture : photutils.aperture.Aperture.PixelAperture
-            The aperture object used to create the subcube.
-
-        Returns
-        -------
-        np.ndarray or mpdaf.obj.Cube
-            Subcube with masked pixels outside the defined aperture
-        """
-        if aperture is not None:
-            mask = aperture.to_mask(method="center").to_image(white.shape)
-        else:

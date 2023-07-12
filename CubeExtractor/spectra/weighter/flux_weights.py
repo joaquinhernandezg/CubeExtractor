@@ -19,3 +19,5 @@ class FluxWeighths(BaseWeights):
         ws *= (ws>0)
         ws = ws
         return ws
+
+
