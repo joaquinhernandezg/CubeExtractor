@@ -55,10 +55,6 @@ class PlotAperturesScript(ScriptBase):
 
         # basic input verification
 
-        # checks if the cube exists
-        if not os.path.exists(args.cube_filename):
-            raise ValueError("Cube filename {} does not exist".format(args.cube_filename))
-
         if os.path.exists(args.white_image_filename) and not args.overwrite_all:
             raise ValueError("White image filename {} already exists".format(args.white_image_filename))
 
