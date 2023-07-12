@@ -5,6 +5,8 @@ import numpy as np
 class MarzConverter:
     @staticmethod
     def spec_list_to_fits(spectra, wave_header, out_filename="marz_spectra.fits", overwrite=False):
+        wave_header = spectra[0].wave.to_header()
+
         data_matrix = np.array([spec.data for spec in spectra ])
         variance_matrix = np.array([spec.var for spec in spectra])
 

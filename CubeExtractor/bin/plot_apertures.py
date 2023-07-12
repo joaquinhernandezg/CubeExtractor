@@ -73,6 +73,7 @@ class PlotAperturesScript(ScriptBase):
         catalog = Table.read(args.sextractor_catalog_filename)
         segmentation_mask = fits.getdata(args.segmentation_mask) if args.segmentation_mask else None
 
+        #TODO: add colors to the apertures
         fig, ax = plot_apertures(white, catalog, ra_column=args.ra_column, dec_column=args.dec_column,
                                  id_column=args.id_column, aperture_extractor=aperture_extractor,
                                  segmentation_mask=segmentation_mask)

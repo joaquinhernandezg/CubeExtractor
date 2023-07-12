@@ -2,7 +2,8 @@ from .scriptbase import ScriptBase
 from CubeExtractor.spectra.extractor import (CircularApertureExtractor,
                                         EllipticalApertureExtractor,
                                         MaskExtractor)
-from CubeExtractor.utils.batch_extract import extract_batch_spectra, write_cutouts
+from CubeExtractor.utils.batch_extract import extract_batch_spectra
+from CubeExtractor.utils.utils import write_extraction_data
 import argparse
 import os
 
@@ -111,18 +112,8 @@ class ExtractSpectraFromCubeScript(ScriptBase):
                                         segmentation_mask_filename=args.segmentation_mask,
                                         skip_exceptions=args.skip_exceptions,)
 
-        if args.out_cutouts_dir is not None:
-            write_cutouts(spectra, args.out_cutouts_dir, overwrite=args.overwrite_all)
+        #TODO: change this to make a function containing all the writing
 
-
-        if args.marz_spectra_outfile:
-            wave_header = cube.wave.to_header()
-            marz_converter = MarzConverter.spec_list_to_fits(spectra, wave_header, args.marz_spectra_outfile, overwrite=args.overwrite_all)
-
-        if args.linetools_spectra_dir:
-            LinetoolsConverter.spec_list_to_fits(spectra, out_dir=args.linetools_spectra_dir, overwrite=args.overwrite_all)
-
-        if args.redmonster_spectra_outdir:
-            RedMonsterConverter.spec_list_to_fits(spectra, out_dir=args.redmonster_spectra_outdir, overwrite=args.overwrite_all)
-
-
+        write_extraction_data(spectra, out_cutous_dir=args.out_cutouts_dir, marz_table_filename=args.marz_spectra_outfile,
+                              linetools_outdir=args.linetools_spectra_dir, redmonster_outdir=args.redmonster_spectra_outdir,
+                              overwrite=args.overwrite_all)
