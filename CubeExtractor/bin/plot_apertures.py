@@ -46,7 +46,7 @@ class PlotAperturesScript(ScriptBase):
 
         parser.add_argument("--out_filename", type=str, default=None, help="filename of the plot if saved")
 
-        parser.add_argument("--overwrite_all", type=str2bool, default=False, help="Overwrite all files")
+        parser.add_argument("--overwrite", type=str2bool, default=False, help="Overwrite all files")
 
         return parser
 
@@ -55,8 +55,8 @@ class PlotAperturesScript(ScriptBase):
 
         # basic input verification
 
-        if os.path.exists(args.white_image_filename) and not args.overwrite_all:
-            raise ValueError("White image filename {} already exists".format(args.white_image_filename))
+        if not os.path.exists(args.white_image_filename):
+            raise ValueError("White image filename {} do not exists".format(args.white_image_filename))
 
         # defines the handler for each aperture type
         if args.aperture_type == "elliptical":

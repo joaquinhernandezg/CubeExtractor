@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 from ..spectra.extractor import (CircularApertureExtractor,MaskExtractor, EllipticalApertureExtractor)
 
 from astropy.visualization import ZScaleInterval
+from photutils.segmentation import SegmentationImage
+
 
 
 def plot_apertures(white_image, catalog, ra_column, dec_column, id_column,
@@ -15,7 +17,8 @@ def plot_apertures(white_image, catalog, ra_column, dec_column, id_column,
               *imshow_args, **imshow_kwargs)
 
     if segmentation_mask is not None:
-        ax.imshow(segmentation_mask, origin="lower", alpha=0.5)
+        segm = SegmentationImage(segmentation_mask)
+        ax.imshow(segmentation_mask, origin="lower", alpha=0.5, cmap=segm.make_cmap(seed=0))
 
     if aperture_extractor is not None and aperture_extractor != MaskExtractor:
         sky_apertures = aperture_extractor.get_apertures(catalog, ra_column=ra_column, dec_column=dec_column, id_column=id_column)
