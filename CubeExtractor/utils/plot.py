@@ -18,7 +18,7 @@ def plot_apertures(white_image, catalog, ra_column, dec_column, id_column,
 
     if segmentation_mask is not None:
         segm = SegmentationImage(segmentation_mask)
-        ax.imshow(segmentation_mask, origin="lower", alpha=0.9, cmap=segm.make_cmap(seed=0))
+        ax.imshow(segmentation_mask, origin="lower", alpha=0.9, cmap=segm.make_cmap(seed=0, background_color=(0, 0, 0, 0.1)))
 
     if aperture_extractor is not None and aperture_extractor != MaskExtractor:
         sky_apertures = aperture_extractor.get_apertures(catalog, ra_column=ra_column, dec_column=dec_column, id_column=id_column)
