@@ -41,7 +41,7 @@ class ExtractSpectra(ScriptBase):
         config = configparser.ConfigParser()
         config.read(args.config_file)
 
-
+        # Veryfy inputs and create dirs
 
 
 
