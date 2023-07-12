@@ -16,7 +16,7 @@ import logging
 logging.basicConfig(level = logging.INFO)
 
 
-class ExtractSpectraFromCubeScriptInline(ScriptBase):
+class ExtractSpectraFromCubeInlineScript(ScriptBase):
 
     @classmethod
     def get_parser(cls, width=None):
