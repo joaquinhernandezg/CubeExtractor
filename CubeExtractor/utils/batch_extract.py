@@ -75,35 +75,6 @@ def extract_batch_spectra(cube_filename, white_filename, catalog_filename, apert
 
     return spectra_list
 
-def write_cutouts(spectra_list, out_dir, overwrite=True):
-    """Writes a list of spectra to a FITS file.
-
-    Parameters
-    ----------
-    spectra : list
-        The list of spectra to write to the FITS file.
-    """
-
-    if not os.path.exists(out_dir):
-        os.makedirs(out_dir)
-
-    for spec in spectra_list:
-        hdul = fits.HDUList()
-
-        white = spec.white_cutout.data
-        mask = spec.mask_cutout
-        weight = spec.weight_cutout
-        hdul.append(fits.PrimaryHDU())
-        if white is not None:
-            hdul.append(fits.ImageHDU(np.array(white)))
-        if mask is not None:
-            hdul.append(fits.ImageHDU(np.array(mask)))
-        if weight is not None:
-            hdul.append(fits.ImageHDU(np.array(weight)))
-
-        hdul.writeto(os.path.join(out_dir, str(spec.primary_header["ID_OBJ"]).zfill(4) + ".fits"), overwrite=overwrite)
-
-
 
 
 
