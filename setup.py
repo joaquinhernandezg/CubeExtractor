@@ -25,7 +25,7 @@ setuptools.setup(
     ],
     packages=setuptools.find_packages(),
     python_requires=">=3.8",
-    install_requires=['numpy', 'scipy', 'astropy', 'photutils', 'tqdm'],
+    install_requires=['numpy', 'scipy', 'astropy', 'photutils', 'tqdm', 'mpdaf'],
     entry_points={
                         'console_scripts': [
                                 'cube_extract=CubeExtractor.bin.cube_extract:ExtractSpectraFromCubeScript.entry_point',

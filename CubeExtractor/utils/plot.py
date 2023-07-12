@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from ..extractor import MaskExtractor
+from ..spectra.extractor import (CircularApertureExtractor,MaskExtractor, EllipticalApertureExtractor)
 
 from astropy.visualization import ZScaleInterval
 
