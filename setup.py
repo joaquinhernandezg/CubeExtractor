@@ -26,7 +26,9 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires=">=3.8",
     # add sewpy
-    install_requires=['numpy', 'scipy', 'astropy', 'photutils', 'tqdm', 'mpdaf'],
+    install_requires=['numpy', 'scipy', 'astropy>=5.0',
+                      'photutils>=1.8', 'tqdm', 'mpdaf',
+                      'linetools'],
     entry_points={
                         'console_scripts': [
                                 'cube_extract=CubeExtractor.bin.cube_extract_inline:ExtractSpectraFromCubeInlineScript.entry_point',
