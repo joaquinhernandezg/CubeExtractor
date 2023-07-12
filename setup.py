@@ -26,7 +26,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires=">=3.8",
     # add sewpy
-    install_requires=['numpy', 'scipy', 'astropy>=5.0',
+    install_requires=['numpy', 'scipy', 'astropy>=5.2.1',
                       'photutils>=1.8', 'tqdm', 'mpdaf',
                       'linetools'],
     entry_points={
