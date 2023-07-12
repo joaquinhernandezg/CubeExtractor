@@ -1,4 +1,4 @@
-from .scriptbase import ScriptBase
+from .scriptbase import ScriptBase, str2bool
 from CubeExtractor.utils.utils import make_white_image
 
 import argparse
@@ -11,17 +11,6 @@ from astropy.io import fits
 
 import logging
 logging.basicConfig(level = logging.INFO)
-
-def str2bool(v):
-    if isinstance(v, bool):
-        return v
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
-        return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-        return False
-    else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
-
 
 class MakeWhiteImageScript(ScriptBase):
 

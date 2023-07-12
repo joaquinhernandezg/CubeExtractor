@@ -1,4 +1,4 @@
-from .scriptbase import ScriptBase
+from .scriptbase import ScriptBase, str2bool
 from CubeExtractor.spectra.extractor import (CircularApertureExtractor,
                                         EllipticalApertureExtractor,
                                         MaskExtractor)
@@ -15,15 +15,7 @@ from astropy.io import fits
 import logging
 logging.basicConfig(level = logging.INFO)
 
-def str2bool(v):
-    if isinstance(v, bool):
-        return v
-    if v.lower() in ('yes', 'true', 't', 'y', '1'):
-        return True
-    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
-        return False
-    else:
-        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 class ExtractSpectraFromCubeScript(ScriptBase):
 
     @classmethod
@@ -111,8 +103,6 @@ class ExtractSpectraFromCubeScript(ScriptBase):
                                         dec_column=args.dec_column, id_column=args.id_column,
                                         segmentation_mask_filename=args.segmentation_mask,
                                         skip_exceptions=args.skip_exceptions,)
-
-        #TODO: change this to make a function containing all the writing
 
         write_extraction_data(spectra, out_cutous_dir=args.out_cutouts_dir, marz_table_filename=args.marz_spectra_outfile,
                               linetools_outdir=args.linetools_spectra_dir, redmonster_outdir=args.redmonster_spectra_outdir,
