@@ -61,7 +61,7 @@ def write_extraction_data(spectra_list, out_cutous_dir=None, marz_table_filename
         write_cutouts(spectra_list, out_cutous_dir, overwrite=overwrite)
 
     if marz_table_filename:
-        MarzConverter.spec_list_to_fits(spectra_list, marz_table_filename, overwrite=overwrite)
+        MarzConverter.spec_list_to_fits(spectra_list, out_filename=marz_table_filename, overwrite=overwrite)
 
     if linetools_outdir:
         LinetoolsConverter.spec_list_to_fits(spectra_list, out_dir=linetools_outdir, overwrite=overwrite)
