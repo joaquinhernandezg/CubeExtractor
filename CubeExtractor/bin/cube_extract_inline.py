@@ -93,8 +93,6 @@ class ExtractSpectraFromCubeInlineScript(ScriptBase):
 
         # if the white image is passed, plot the segmentation mask and/or the
         # defines apertures over the white image
-        if args.only_first_n > 0:
-            catalog = catalog[0:args.only_first_n]
         # extract the spectra
         spectra = extract_batch_spectra(cube_filename=args.cube_filename, white_filename=args.white_image_filename,
                                         catalog_filename=args.sextractor_catalog_filename,
@@ -102,7 +100,7 @@ class ExtractSpectraFromCubeInlineScript(ScriptBase):
                                         weight_method=args.weight_method, ra_column=args.ra_column,
                                         dec_column=args.dec_column, id_column=args.id_column,
                                         segmentation_mask_filename=args.segmentation_mask,
-                                        skip_exceptions=args.skip_exceptions,)
+                                        skip_exceptions=args.skip_exceptions, extract_only_n=args.only_first_n,)
 
         write_extraction_data(spectra, out_cutous_dir=args.out_cutouts_dir, marz_table_filename=args.marz_spectra_outfile,
                               linetools_outdir=args.linetools_spectra_dir, redmonster_outdir=args.redmonster_spectra_outdir,

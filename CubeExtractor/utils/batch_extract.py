@@ -9,7 +9,7 @@ import traceback
 def extract_batch_spectra(cube_filename, white_filename, catalog_filename, aperture_extractor, combine_method="sum", weight_method=None,
                   ra_column="RA", dec_column="DEC", id_column="ID",
                   segmentation_mask_filename=None,
-                  skip_exceptions=False,
+                  skip_exceptions=False, extract_only_n=-1,
                   *args, **kwargs):
     """Extracts a batch of spectra from a cube and a catalog of sources.
 
@@ -51,6 +51,8 @@ def extract_batch_spectra(cube_filename, white_filename, catalog_filename, apert
     sources_catalog = Table.read(catalog_filename)
     segmentation_mask = fits.getdata(segmentation_mask_filename) if segmentation_mask_filename else None
 
+    if extract_only_n > 0:
+        sources_catalog = sources_catalog[0:extract_only_n]
     spectra_list = []
     for i in range(len(sources_catalog)):
         ra = sources_catalog[ra_column][i]
