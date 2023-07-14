@@ -57,15 +57,15 @@ def write_extraction_data(spectra_list, out_cutous_dir=None, marz_table_filename
                           linetools_outdir=None, redmonster_outdir=None, overwrite=False):
 
 
-    if out_cutous_dir is not None:
+    if out_cutous_dir:
         write_cutouts(spectra_list, out_cutous_dir, overwrite=overwrite)
 
-    if marz_table_filename is not None:
+    if marz_table_filename:
         MarzConverter.spec_list_to_fits(spectra_list, marz_table_filename, overwrite=overwrite)
 
-    if linetools_outdir is not None:
+    if linetools_outdir:
         LinetoolsConverter.spec_list_to_fits(spectra_list, out_dir=linetools_outdir, overwrite=overwrite)
 
-    if redmonster_outdir is not None:
+    if redmonster_outdir:
         RedMonsterConverter.spec_list_to_fits(spectra_list, out_dir=redmonster_outdir, overwrite=overwrite)
 
