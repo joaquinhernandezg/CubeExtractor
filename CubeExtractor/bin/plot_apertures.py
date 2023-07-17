@@ -11,7 +11,6 @@ from astropy.io import fits
 
 
 
-
 import logging
 logging.basicConfig(level = logging.INFO)
 
@@ -23,9 +22,8 @@ class PlotAperturesScript(ScriptBase):
 
 
         parser.add_argument("--white_image_filename", type=str, help="White image of the cube")
-
-        parser.add_argument("--sextractor_catalog_filename", type=str, help="Sextractor catalog filename")
-        parser.add_argument("--skip_exceptions", type=str2bool, help="If True, skips exceptions and just logs them")
+        parser.add_argument("--catalog", type=str, help="Sextractor catalog filename")
+        parser.add_argument("--out_filename", type=str, default=None, help="filename of the plot if saved")
 
         parser.add_argument("--aperture_type", type=str, default="elliptical", help="Aperture type")
         parser.add_argument("--segmentation_mask", type=str, default=None, help="segmentation mask")
@@ -36,7 +34,6 @@ class PlotAperturesScript(ScriptBase):
         parser.add_argument("--dec_column", type=str, default="DELTA_J2000", help="RA column")
         parser.add_argument("--id_column", type=str, default="NUMBER", help="ID column")
 
-        parser.add_argument("--out_filename", type=str, default=None, help="filename of the plot if saved")
 
         parser.add_argument("--overwrite", type=str2bool, default=False, help="Overwrite all files")
 

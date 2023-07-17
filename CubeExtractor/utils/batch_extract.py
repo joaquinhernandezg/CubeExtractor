@@ -46,6 +46,7 @@ def extract_batch_spectra(cube_filename, white_filename, catalog_filename, apert
     spectra : `~astropy.table.Table`
         The extracted spectra.
     """
+    # handle cases of elliptical apertures
     cube = Cube(cube_filename)
     white = Image(white_filename)
     sources_catalog = Table.read(catalog_filename)

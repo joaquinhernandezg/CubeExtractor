@@ -1,17 +1,8 @@
 from .scriptbase import ScriptBase, str2bool
-from CubeExtractor.spectra.extractor import (CircularApertureExtractor,
-                                        EllipticalApertureExtractor,
-                                        MaskExtractor)
-from CubeExtractor.utils.batch_extract import extract_batch_spectra
-from CubeExtractor.utils.utils import write_extraction_data
-import argparse
-import os
-
-from astropy.table import Table
-from astropy.io import fits
+from CubeExtractor.utils.config import ReadConfig
 import configparser
 
-
+import os
 
 import logging
 logging.basicConfig(level = logging.INFO)
@@ -38,8 +29,7 @@ class ExtractSpectra(ScriptBase):
         if not os.path.exists(args.config_file):
             raise ValueError("Config file {} does not exist".format(args.config_file))
 
-        config = configparser.ConfigParser()
-        config.read(args.config_file)
+        config = ReadConfig(args.config_file).config
 
         # Veryfy inputs and create dirs
 
