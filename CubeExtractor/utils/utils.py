@@ -11,8 +11,8 @@ def make_white_image(cube, out_filename=None, mask_nans=True, wave_min=None, wav
         raise ValueError("cube must be a path to a cube or a Cube instance")
 
     if mask_nans:
-        cube.data.mask = np.isnan(cube.data)
-        cube.var.mask = np.isnan(cube.var)
+        cube.data.mask = np.logical_not(np.isnan(cube.data))
+        cube.var.mask = np.logical_not(np.isnan(cube.var))
 
     #TODO: add the cases where wave_min or wave_max are None, take them as the min and max of the cube
     if wave_min is not None and wave_max is not None:

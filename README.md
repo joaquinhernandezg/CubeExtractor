@@ -26,6 +26,8 @@ Detection parameters in the *default.sex* have to be manually tuned in order to 
 
 As a rule of thumb, always output the apertures, segmentation, and background images. If your cube present severe "stripes" from the MUSE CCDs, try playing with the background parameters, until you get see the background checkimage correctly estimates it (in order to substract it later). Constantly check you aperture checkimage in order to verify your sources of interest are being detected. Also, checking the segmentation checkimage is useful to check is the deblending is working properly, this is important, we use the segmentation image for extraction of spectra.
 
+## Extraction of spectra
+
 
 
 ## Command-line Scripts
@@ -40,7 +42,6 @@ cube_make_white --cube_filename cube.fits --white_image_filename white.fits
 ### Plot Apertures
 `
 cube_plot_apertures --white_image_filename white.fits --out_filename apertures.pdf --aperture type segmentation --segmentation_mask segmentation.fits
-
-
+`
 
 
