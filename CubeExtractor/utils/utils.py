@@ -19,6 +19,7 @@ def make_white_image(cube, out_filename=None, mask_nans=True, wave_min=None, wav
         cube = cube.select_lambda(wave_min, wave_max)
 
     white = cube.sum(axis=0)
+    white.var[white.var==0] = 0
     if isinstance(out_filename, str):
         white.write(out_filename )
     return white
