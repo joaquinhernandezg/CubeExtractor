@@ -1,11 +1,26 @@
 import configparser
 import os
 from astropy.table import Table
+import sys
+import shutil
 
 
 def make_default_config():
     config = configparser.ConfigParser()
-    config["CONFIG"] = {"SEX_PATH": "/bin/sex"}
+    sex_path = shutil.which('sex')
+    if sex_path is None:
+        sex_path = shutil.which('sextractor')
+    if sex_path is None:
+        sex_path = ""
+        config_name = ""
+        params_name = ""
+
+    else:
+        config_name = "default_extraction.sex"
+        params_name = "default_extraction.params"
+        generate_sextractor_config_files(sex_path, config_name, params_name)
+
+    config["CONFIG"] = {"SEX_PATH": sex_path}
 
     config["INPUT"] = {"CUBE": "",
                        "WHITE_IMAGE": "",
@@ -20,8 +35,8 @@ def make_default_config():
                          "CUTOUTS": "cutouts"}
 
     config["SEXTRACTOR"] = {"RUN": "yes",
-                            "CONFIG_NAME": "default.sex",
-                            "PARAMS_NAME": "default.param",
+                            "CONFIG_NAME": config_name,
+                            "PARAMS_NAME": params_name,
                             "CATALOG_NAME": "cat.fits",
                             "SEGMENTATION_IMAGE": "seg.fits",
                             "APERTURES_IMAGE": "aper.fits",
@@ -43,6 +58,7 @@ def make_default_config():
                         "MARZ": "yes",
                         "LINETOOLS": "yes",
                         "REDMONSTER": "yes",
+                        "CUTOUTS_DIR": "cutouts",
                         "MARZ_NAME": "marz_table.fits",
                         "LINETOOLS_DIR": "linetools_spectra",
                         "REDMONSTER_DIR": "redmonster_spectra",
@@ -52,6 +68,19 @@ def make_default_config():
     config["PLOT"] = {"PlotApertures": "yes"}
 
     return config
+
+def generate_sextractor_config_files(sex_path, out_config="default.sex",
+                                     out_params="default.params"):
+    if os.path.exists(out_config):
+        print("Config file {} already exists. Not written.".format(out_config))
+    else:
+        command = f"{sex_path} -dd > {out_config}"
+        os.system(command)
+    if os.path.exists(out_params):
+        print("Params file {} already exists. Not written.".format(out_params))
+    else:
+        command = f"{sex_path} -dp > {out_params}"
+        os.system(command)
 
 class ReadConfig:
     def __init__(self, config_file):

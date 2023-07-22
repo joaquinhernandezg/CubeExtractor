@@ -3,7 +3,8 @@ from astropy.table import Table
 from astropy.io import fits
 import os
 import traceback
-
+import logging
+import numpy as np
 
 
 def extract_batch_spectra(cube_filename, white_filename, catalog_filename, aperture_extractor, combine_method="sum", weight_method=None,
@@ -48,6 +49,7 @@ def extract_batch_spectra(cube_filename, white_filename, catalog_filename, apert
     """
     # handle cases of elliptical apertures
     cube = Cube(cube_filename)
+    cube.var.data[cube.var.data==0] = np.inf
     white = Image(white_filename)
     sources_catalog = Table.read(catalog_filename)
     segmentation_mask = fits.getdata(segmentation_mask_filename) if segmentation_mask_filename else None
@@ -56,6 +58,7 @@ def extract_batch_spectra(cube_filename, white_filename, catalog_filename, apert
         sources_catalog = sources_catalog[0:extract_only_n]
     spectra_list = []
     for i in range(len(sources_catalog)):
+        logging.info("Extracting spectrum: ID: {}, {}/{}".format(sources_catalog[id_column][i], i+1, len(sources_catalog)))
         ra = sources_catalog[ra_column][i]
         dec = sources_catalog[dec_column][i]
         source_id = sources_catalog[id_column][i]

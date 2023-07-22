@@ -15,15 +15,18 @@ class RedMonsterConverter:
                 print("Wrote spectrum", spec.primary_header["ID_OBJ"])
             except Exception as e:
                 print(e)
-                print("Couldn't save spectrum", spec.primary_header["ID_OBJ"])
+                print("Couldn't save REDMONTER spectrum", spec.primary_header["ID_OBJ"])
 
 
     @staticmethod
     def spec_to_file(spectrum, out_filename=None, out_dir="./", overwrite=True):
 
+        if not os.path.exists(out_dir):
+            os.makedirs(out_dir)
         wave = spectrum.wave.coord()
         flux = spectrum.data
         sig = np.sqrt(spectrum.var.data)
+        sig[sig==0] = np.inf
         spec = XSpectrum1D.from_tuple((wave, flux, sig), verbose=False)
 
 

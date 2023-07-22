@@ -1,18 +1,20 @@
 import sewpy
-
+import os
 def run_sex(workdir, sexpath, image_path, config_name, params_name, catalog_name,
             segmentation_image="segmentation.fits", apertures_image="apertures.fits",
             make_segm=True, make_apertures=True,
             data_ext=1, var_ext=2, use_var=False):
 
+    catalog_name = os.path.join(workdir, catalog_name)
     checkimage_type = []
     checkimage_name = []
     if make_apertures:
         checkimage_type.append("APERTURES")
-        checkimage_name.append(apertures_image)
+        checkimage_name.append(os.path.join(workdir, apertures_image))
     if make_segm:
         checkimage_type.append("SEGMENTATION")
-        checkimage_name.append(segmentation_image)
+        checkimage_name.append(os.path.join(workdir, segmentation_image))
+
 
     weight_type = "NONE"
     weight_image = "NONE"
@@ -31,11 +33,12 @@ def run_sex(workdir, sexpath, image_path, config_name, params_name, catalog_name
                 "WEIGHT_IMAGE": weight_image,
                 },
 
-        configfile=config_name,
+        configfilepath=config_name,
         workdir=workdir,
+        sexpath=sexpath,
         )
-    out_dict = sew(imgfilepath=image_path, sexpath=sexpath,
-                   return_cat=True)
+    out_dict = sew(imgfilepath=image_path,
+                   returncat=True)
     table = out_dict["table"]
     table.write(catalog_name, overwrite=True)
     return

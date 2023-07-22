@@ -28,10 +28,13 @@ setuptools.setup(
     # add sewpy
     install_requires=['numpy', 'scipy', 'astropy>=5.2.1',
                       'photutils>=1.8', 'tqdm', 'mpdaf',
-                      'linetools'],
+                      'linetools',
+                      #'sewpy @ git+ssh://git@github.com:megalut/sewpy.git#egg=sewpy'
+                      ],
     entry_points={
                         'console_scripts': [
                                 'cube_extract=CubeExtractor.bin.cube_extract_inline:ExtractSpectraFromCubeInlineScript.entry_point',
+                                'cube_extract_config=CubeExtractor.bin.cube_extract:ExtractSpectra.entry_point',
                                 'cube_plot_apertures=CubeExtractor.bin.plot_apertures:PlotAperturesScript.entry_point',
                                 'cube_make_white=CubeExtractor.bin.make_white_image:MakeWhiteImageScript.entry_point',
                                 'cube_gen_config=CubeExtractor.bin.gen_config:MakeConfig.entry_point'

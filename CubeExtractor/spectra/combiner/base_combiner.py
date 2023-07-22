@@ -22,7 +22,7 @@ class SimpleCubeSpectraCombiner:
     def combine(cls, masked_cube, white, combine_method="mean", weighter=None, *weighter_args, **weighter_kwargs):
 
         #TODO: move this to somewhere else
-        if weighter == "None":
+        if weighter == "none":
             weighter = NoWeights
         elif weighter == "flux":
             weighter = FluxWeighths
