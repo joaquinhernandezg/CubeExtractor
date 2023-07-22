@@ -242,7 +242,7 @@ class ApertureExtractor:
         return fig
 
     @classmethod
-    def get_apertures(cls, sextractor_catalog):
+    def get_apertures(cls, sextractor_catalog, *args, **kwargs):
         raise NotImplementedError("Not supported yet")
 
     @classmethod

@@ -31,7 +31,7 @@ class ExtractSpectra(ScriptBase):
             raise ValueError("Config file {} does not exist".format(args.config_file))
 
         config = ReadConfig(args.config_file).config
-        RunSteps(config)
+        RunSteps(config).run()
 
 
         # Veryfy inputs and create dirs

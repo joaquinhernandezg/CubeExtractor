@@ -5,13 +5,77 @@ from ..spectra.extractor import get_aperture_extractor
 import logging
 from ..utils.batch_extract import extract_batch_spectra
 from ..utils.utils import write_extraction_data
+from ..utils.plot import plot_apertures
 
 class RunSteps:
     def __init__(self, config):
         self.config = config
+
+
+    def run(self):
         if self.config["SEXTRACTOR"].getboolean("RUN"):
             self.step1_SExtractor()
         self.step2_Extraction()
+
+    def plot(self):
+        # basic input verification
+        main_workdir = self.config["WORKDIR"]["MAIN"]
+        sex_workdir = self.config["WORKDIR"]["SEXTRACTOR"]
+
+        sex_workdir = os.path.join(main_workdir, sex_workdir)
+        catalog_name = self.config["SEXTRACTOR"]["CATALOG_NAME"]
+        catalog_name = os.path.join(sex_workdir, catalog_name)
+
+        cube_filename = self.config["INPUT"]["CUBE"]
+        white_filename = self.config["INPUT"]["WHITE_IMAGE"]
+        weight_method = self.config["EXTRACTION"]["WEIGHT"]
+        segmentation_mask = self.config["SEXTRACTOR"]["SEGMENTATION_IMAGE"]
+        segmentation_mask = os.path.join(sex_workdir, segmentation_mask)
+        skip_exceptions = self.config["DEBUG"].getboolean("SKIP_EXTRACTION_ERRORS")
+        combine_method = self.config["EXTRACTION"]["COMBINE"]
+        ra_column = self.config["EXTRACTION"]["RA_COLUMN"]
+        dec_column = self.config["EXTRACTION"]["DEC_COLUMN"]
+        theta_column = self.config["EXTRACTION"]["THETA_COLUMN"]
+        a_column = self.config["EXTRACTION"]["A_COLUMN"]
+        b_column = self.config["EXTRACTION"]["B_COLUMN"]
+        circular_aperture_size = int(self.config["EXTRACTION"]["CIRCULAR_APERTURE_SIZE"])
+        radius_column = self.config["EXTRACTION"]["RADIUS_COLUMN"]
+        radius_factor = float(self.config["EXTRACTION"]["RADIUS_FACTOR"])
+        pix_scale = float(self.config["EXTRACTION"]["PIX_SCALE"])
+        radius_factor = radius_factor * pix_scale
+
+        extract_only_n = int(self.config["DEBUG"]["EXTRACT_FIRST_N"])
+
+        aperture_type = self.config["EXTRACTION"]["APERTURE"]
+
+        plot_filename = self.config["PLOT"]["FILENAME"]
+        plot_filename = os.path.join(main_workdir, plot_filename)
+
+        display = self.config["PLOT"].getboolean("DISPLAY")
+
+
+        if not os.path.exists(white_filename):
+            raise ValueError("White image filename {} do not exists".format(white_filename))
+
+        aperture_extractor = get_aperture_extractor(aperture_type)
+        # defines the handler for each aperture type
+        logging.info(f"Using aperture: {aperture_type}")
+
+
+        #TODO: add colors to the apertures
+        fig, ax = plot_apertures(white_filename, catalog_name, ra_column=ra_column, dec_column=dec_column,
+                                 a_column=a_column, b_column=b_column, theta_column=theta_column,
+                                 radius_column=radius_column, radius_factor=radius_factor,
+                                 id_column="NUMBER", aperture_extractor=aperture_extractor,
+                                 segmentation_mask=segmentation_mask)
+        fig.savefig(plot_filename)
+        if display:
+            import matplotlib.pyplot as plt
+            fig.show()
+            plt.show()
+
+
+
 
     def step1_SExtractor(self):
         """
@@ -75,6 +139,10 @@ class RunSteps:
         theta_column = self.config["EXTRACTION"]["THETA_COLUMN"]
         a_column = self.config["EXTRACTION"]["A_COLUMN"]
         b_column = self.config["EXTRACTION"]["B_COLUMN"]
+        circular_aperture_size = int(self.config["EXTRACTION"]["CIRCULAR_APERTURE_SIZE"])
+        radius_column = self.config["EXTRACTION"]["RADIUS_COLUMN"]
+        radius_factor = float(self.config["EXTRACTION"]["RADIUS_FACTOR"])
+
         extract_only_n = int(self.config["DEBUG"]["EXTRACT_FIRST_N"])
 
         aperture_type = self.config["EXTRACTION"]["APERTURE"]
@@ -120,7 +188,9 @@ class RunSteps:
                                         weight_method=weight_method, ra_column=ra_column,
                                         dec_column=dec_column, id_column="NUMBER",
                                         segmentation_mask_filename=segmentation_mask,
-                                        skip_exceptions=skip_exceptions, extract_only_n=extract_only_n)
+                                        skip_exceptions=skip_exceptions, extract_only_n=extract_only_n,
+                                        a_column=a_column, b_column=b_column, theta_column=theta_column,
+                                        radius_column=radius_column, radius_factor=radius_factor)
 
 
         write_extraction_data(spectra, out_cutous_dir=out_cutouts_dir, marz_table_filename=marz_name,

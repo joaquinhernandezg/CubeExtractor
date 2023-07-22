@@ -52,7 +52,10 @@ def make_default_config():
                             "DEC_COLUMN": "DELTA_J2000",
                             "A_COLUMN": "A_WORLD",
                             "B_COLUMN": "B_WORLD",
-                            "THETA_COLUMN": "THETA_WORLD"
+                            "THETA_COLUMN": "THETA_WORLD",
+                            "RADIUS_COLUMN": "FLUX_RADIUS",
+                            "RADIUS_FACTOR": "1",
+                            "CIRCULAR_APERTURE_SIZE": "-1",
                             }
     config["OUTPUT"] = {"CUTOUTS": "yes",
                         "MARZ": "yes",
@@ -65,7 +68,9 @@ def make_default_config():
                         "OVERWRITE": "yes"}
     config["DEBUG"] = {"SKIP_EXTRACTION_ERRORS": "yes",
                        "EXTRACT_FIRST_N": "-1"}
-    config["PLOT"] = {"PlotApertures": "yes"}
+    config["PLOT"] = {"PLOT_APERTURES": "yes",
+                      "FILENAME": "apertures.pdf",
+                      "DISPLAY": "no"}
 
     return config
 

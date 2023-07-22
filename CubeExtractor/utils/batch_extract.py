@@ -9,6 +9,8 @@ import numpy as np
 
 def extract_batch_spectra(cube_filename, white_filename, catalog_filename, aperture_extractor, combine_method="sum", weight_method=None,
                   ra_column="RA", dec_column="DEC", id_column="ID",
+                  a_column="A_WORLD", b_column="B_WORLD", theta_column="THETA_WORLD",
+                  radius_column="FLUX_RADIUS", radius_factor=1.0,
                   segmentation_mask_filename=None,
                   skip_exceptions=False, extract_only_n=-1,
                   *args, **kwargs):
@@ -62,13 +64,24 @@ def extract_batch_spectra(cube_filename, white_filename, catalog_filename, apert
         ra = sources_catalog[ra_column][i]
         dec = sources_catalog[dec_column][i]
         source_id = sources_catalog[id_column][i]
+        a, b = sources_catalog[a_column][i], sources_catalog[b_column][i]
+        radius = sources_catalog[radius_column][i]/3600*radius_factor
+        ax_ratio = b/a
+        a, b = radius/np.sqrt(ax_ratio), radius*np.sqrt(ax_ratio)
+        theta = np.deg2rad(sources_catalog[theta_column][i])
+
 
         mask = segmentation_mask == source_id if segmentation_mask is not None else None
+
 
         try:
             spec = aperture_extractor.extract_single(cube=cube, white=white, ra=ra, dec=dec,
                                                      spectrum_id=source_id, segmentation_mask=mask,
-                                                     combine_method=combine_method, weight_method=weight_method, *args, **kwargs)
+                                                     combine_method=combine_method, weight_method=weight_method,
+                                                     a=a, b=b,
+                                                     pos_angle=theta,
+                                                     radius=radius,
+                                                     *args, **kwargs)
         except Exception as e:
             if not skip_exceptions:
                 raise e
