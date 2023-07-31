@@ -9,7 +9,7 @@ setuptools.setup(
     author="Joaquin Hernandez",
     author_email="joaquin.hernandezg@uc.cl",
     description="A code to perform spectral extraction on MUSE cubes",
-    long_description=long_description,
+    #long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/joaquinhernandezg/CubeExtractor",
     project_urls={
