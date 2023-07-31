@@ -19,7 +19,7 @@ class EllipticalApertureExtractor(ApertureExtractor):
         radii = sextractor_catalog[radius_column]*radius_factor
         apertures = []
         for ra, dec, radius, a, b, pos_angle in zip(ra_list, dec_list, radii, a_list, b_list, pos_angle_list):
-            if radius < 0 or a<0 or b<0:
+            if radius <= 0 or a<=0 or b<=0:
                 print("Negative radius")
                 continue
             ax_ratio = b/a
