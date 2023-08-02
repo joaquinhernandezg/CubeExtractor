@@ -12,7 +12,11 @@ def make_white_image(cube, out_filename=None, mask_nans=True, wave_min=None, wav
 
     if mask_nans:
         cube.data[np.isnan(cube.data)] = 0
-        cube.var[np.isnan(cube.data)] = np.inf
+        if cube.var is not None:
+            cube.var[np.isnan(cube.data)] = np.inf
+        else:
+            cube.var = np.ones_like(cube.data)*np.inf
+
 
     #TODO: add the cases where wave_min or wave_max are None, take them as the min and max of the cube
     if wave_min is not None and wave_max is not None:
