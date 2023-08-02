@@ -30,6 +30,7 @@ class SimpleCubeSpectraCombiner:
             weighter = IVarWeights
         #elif weighter == "robertson":
         #    weighter = RobertsonWeights
+
         elif weighter == "snr":
             weighter = SNRWeights
         else:
