@@ -12,18 +12,18 @@ def make_white_image(cube, out_filename=None, mask_nans=True, wave_min=None, wav
 
     if mask_nans:
         cube.data[np.isnan(cube.data)] = 0
-        if cube.var is not None:
-            cube.var[np.isnan(cube.data)] = np.inf
-        else:
-            cube.var = np.ones_like(cube.data)*np.inf
-
+        cube.var[np.isnan(cube.data)] = np.inf
 
     #TODO: add the cases where wave_min or wave_max are None, take them as the min and max of the cube
     if wave_min is not None and wave_max is not None:
         cube = cube.select_lambda(wave_min, wave_max)
 
     white = cube.median(axis=0)
-    white.var.data[white.var.data==0] = np.inf
+
+    if white.var is not None:
+        white.var.data[white.var.data==0] = np.inf
+    else:
+        white.var = np.ones_like(white.data)*np.inf
     if isinstance(out_filename, str):
         white.write(out_filename )
     return white
