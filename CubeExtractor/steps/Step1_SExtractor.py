@@ -2,7 +2,8 @@ import sewpy
 import os
 def run_sex(workdir, sexpath, image_path, config_name, params_name, catalog_name,
             segmentation_image="segmentation.fits", apertures_image="apertures.fits",
-            make_segm=True, make_apertures=True,
+            background_image="background.fits",
+            make_segm=True, make_apertures=True, make_background=True,
             data_ext=1, var_ext=2, use_var=False):
 
     catalog_name = os.path.join(workdir, catalog_name)
@@ -14,6 +15,9 @@ def run_sex(workdir, sexpath, image_path, config_name, params_name, catalog_name
     if make_segm:
         checkimage_type.append("SEGMENTATION")
         checkimage_name.append(os.path.join(workdir, segmentation_image))
+    if make_background:
+        checkimage_type.append("BACKGROUND")
+        checkimage_name.append(os.path.join(workdir, background_image))
 
 
     weight_type = "NONE"

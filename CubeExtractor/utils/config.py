@@ -39,9 +39,11 @@ def make_default_config():
                             "PARAMS_NAME": params_name,
                             "CATALOG_NAME": "cat.fits",
                             "SEGMENTATION_IMAGE": "seg.fits",
+                            "BACKGROUND_IMAGE": "bkg.fits",
                             "APERTURES_IMAGE": "aper.fits",
                             "MAKE_SEGMASK": "yes",
                             "MAKE_APERTURES": "yes",
+                            "MAKE_BACKGROUND": "yes",
                             "USE_VARMAP": "no"}
 
     config["EXTRACTION"] = {"RUN": "yes",
@@ -56,6 +58,7 @@ def make_default_config():
                             "RADIUS_COLUMN": "FLUX_RADIUS",
                             "RADIUS_FACTOR": "1",
                             "CIRCULAR_APERTURE_SIZE": "-1",
+                            "PIX_SCALE": "0.2",
                             }
     config["OUTPUT"] = {"CUTOUTS": "yes",
                         "MARZ": "yes",

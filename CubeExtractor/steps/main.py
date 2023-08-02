@@ -93,8 +93,10 @@ class RunSteps:
         catalog_name = self.config["SEXTRACTOR"]["CATALOG_NAME"]
         segmentation_image = self.config["SEXTRACTOR"]["SEGMENTATION_IMAGE"]
         apertures_image = self.config["SEXTRACTOR"]["APERTURES_IMAGE"]
+        background_image = self.config["SEXTRACTOR"]["BACKGROUND_IMAGE"]
         make_segm = self.config["SEXTRACTOR"]["MAKE_SEGMASK"]
         make_aper = self.config["SEXTRACTOR"]["MAKE_APERTURES"]
+        make_background = self.config["SEXTRACTOR"]["MAKE_BACKGROUND"]
         use_varmap = self.config["SEXTRACTOR"].getboolean("USE_VARMAP")
 
         image_path = self.config["INPUT"]["WHITE_IMAGE"]
@@ -113,6 +115,8 @@ class RunSteps:
             segmentation_image=segmentation_image,
             apertures_image=apertures_image,
             make_apertures=make_aper,
+            background_image=background_image,
+            make_background=make_background,
             data_ext=data_ext,
             var_ext=var_ext,
             use_var=use_varmap,
