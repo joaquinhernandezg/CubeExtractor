@@ -100,6 +100,7 @@ class RunSteps:
         use_varmap = self.config["SEXTRACTOR"].getboolean("USE_VARMAP")
 
         image_path = self.config["INPUT"]["WHITE_IMAGE"]
+        var_path = self.config["INPUT"]["VAR_IMAGE"]
         data_ext = self.config["INPUT"]["WHITE_DATA_EXT"]
         var_ext = self.config["INPUT"]["WHITE_VAR_EXT"]
 
@@ -108,6 +109,7 @@ class RunSteps:
             workdir=sex_workdir,
             sexpath=sex_path,
             image_path=image_path,
+            var_path=var_path,
             config_name=config_name,
             params_name=params_name,
             catalog_name=catalog_name,
