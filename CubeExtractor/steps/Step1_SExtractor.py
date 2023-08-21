@@ -4,7 +4,7 @@ def run_sex(workdir, sexpath, image_path, config_name, params_name, catalog_name
             segmentation_image="segmentation.fits", apertures_image="apertures.fits",
             background_image="background.fits",
             make_segm=True, make_apertures=True, make_background=True,
-            data_ext=1, var_ext=2, use_var=False):
+            data_ext=1, var_ext=2, use_var=False, var_path=None):
 
     catalog_name = os.path.join(workdir, catalog_name)
     checkimage_type = []
@@ -22,9 +22,9 @@ def run_sex(workdir, sexpath, image_path, config_name, params_name, catalog_name
 
     weight_type = "NONE"
     weight_image = "NONE"
-    if use_var:
+    if use_var and var_path is not None:
         weight_type = "MAP_VAR"
-        weight_image = image_path+f"[{var_ext}]"
+        weight_image = var_path
 
 
 
@@ -43,7 +43,7 @@ def run_sex(workdir, sexpath, image_path, config_name, params_name, catalog_name
         sexpath=sexpath,
         )
 
-    image_path = image_path+f"[{data_ext}]"
+    #image_path = image_path+f"[{data_ext}]"
     out_dict = sew(imgfilepath=image_path,
                    returncat=True,)
     table = out_dict["table"]
