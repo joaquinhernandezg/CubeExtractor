@@ -37,7 +37,7 @@ def run_sex(workdir, sexpath, image_path, config_name, params_name, catalog_name
                 "WEIGHT_IMAGE": weight_image,
                 },
 
-        loglevel="DEBUG",
+       # loglevel="DEBUG",
         configfilepath=config_name,
         workdir=workdir,
         sexpath=sexpath,
