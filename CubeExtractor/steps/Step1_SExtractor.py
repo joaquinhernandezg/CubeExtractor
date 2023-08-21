@@ -43,7 +43,7 @@ def run_sex(workdir, sexpath, image_path, config_name, params_name, catalog_name
         sexpath=sexpath,
         )
 
-    image_path = image_path+f"[{data_ext}]"
+    #image_path = image_path+f"[{data_ext}]"
     out_dict = sew(imgfilepath=image_path,
                    returncat=True,)
     table = out_dict["table"]
