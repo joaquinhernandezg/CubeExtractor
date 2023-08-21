@@ -37,6 +37,7 @@ def run_sex(workdir, sexpath, image_path, config_name, params_name, catalog_name
                 "WEIGHT_IMAGE": weight_image,
                 },
 
+        loglevel="DEBUG",
         configfilepath=config_name,
         workdir=workdir,
         sexpath=sexpath,
@@ -44,8 +45,7 @@ def run_sex(workdir, sexpath, image_path, config_name, params_name, catalog_name
 
     image_path = image_path+f"[{data_ext}]"
     out_dict = sew(imgfilepath=image_path,
-                   returncat=True,
-                   loglevel="DEBUG")
+                   returncat=True,)
     table = out_dict["table"]
     table.write(catalog_name, overwrite=True)
     return
