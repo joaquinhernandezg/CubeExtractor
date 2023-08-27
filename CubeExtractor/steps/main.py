@@ -135,6 +135,8 @@ class RunSteps:
 
         cube_filename = self.config["INPUT"]["CUBE"]
         white_filename = self.config["INPUT"]["WHITE_IMAGE"]
+        var_image = self.config["INPUT"]["VAR_IMAGE"]
+
         weight_method = self.config["EXTRACTION"]["WEIGHT"]
         segmentation_mask = self.config["SEXTRACTOR"]["SEGMENTATION_IMAGE"]
         segmentation_mask = os.path.join(sex_workdir, segmentation_mask)
@@ -189,6 +191,7 @@ class RunSteps:
         # extract the spectra
 
         spectra = extract_batch_spectra(cube_filename=cube_filename, white_filename=white_filename,
+                                        var_image=var_image,
                                         catalog_filename=catalog_name,
                                         aperture_extractor=aperture_extractor, combine_method=combine_method,
                                         weight_method=weight_method, ra_column=ra_column,

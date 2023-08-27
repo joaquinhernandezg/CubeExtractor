@@ -12,7 +12,7 @@ def extract_batch_spectra(cube_filename, white_filename, catalog_filename, apert
                   a_column="A_WORLD", b_column="B_WORLD", theta_column="THETA_WORLD",
                   radius_column="FLUX_RADIUS", radius_factor=1.0,
                   segmentation_mask_filename=None,
-                  skip_exceptions=False, extract_only_n=-1,
+                  skip_exceptions=False, extract_only_n=-1, var_image=None,
                   *args, **kwargs):
     """Extracts a batch of spectra from a cube and a catalog of sources.
 
@@ -52,7 +52,12 @@ def extract_batch_spectra(cube_filename, white_filename, catalog_filename, apert
     # handle cases of elliptical apertures
     cube = Cube(cube_filename)
     cube.var.data[cube.var.data==0] = np.inf
+
     white = Image(white_filename)
+    if var_image is not None:
+        var = fits.getdata(var_image)
+        white.var = var
+
     sources_catalog = Table.read(catalog_filename)
     segmentation_mask = fits.getdata(segmentation_mask_filename) if segmentation_mask_filename else None
 
