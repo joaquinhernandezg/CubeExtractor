@@ -54,11 +54,11 @@ def extract_batch_spectra(cube_filename, white_filename, catalog_filename, apert
     cube.var.data[cube.var.data==0] = np.inf
 
     white = Image(white_filename)
-    raise Exception(var_image)
+
     if var_image is not None:
         print(var_image)
         var = fits.getdata(var_image)
-        white.var = var
+        white = white.new_from_obj(white, var=var)
 
     sources_catalog = Table.read(catalog_filename)
     segmentation_mask = fits.getdata(segmentation_mask_filename) if segmentation_mask_filename else None
