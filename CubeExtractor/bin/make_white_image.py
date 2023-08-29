@@ -37,7 +37,7 @@ class MakeWhiteImageScript(ScriptBase):
         if not os.path.exists(args.cube_filename):
             raise ValueError("Cube filename {} does not exist".format(args.cube_filename))
 
-        if os.path.exists(args.white_image_filename) and not args.overwrite:
+        if os.path.exists(args.white_image_filename) and not args.overwritex:
             raise ValueError("White image filename {} already exists".format(args.white_image_filename))
 
         make_white_image(args.cube_filename, args.white_image_filename,

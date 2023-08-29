@@ -55,6 +55,7 @@ def extract_batch_spectra(cube_filename, white_filename, catalog_filename, apert
 
     white = Image(white_filename)
     if var_image is not None:
+        print(var_image)
         var = fits.getdata(var_image)
         white.var = var
 
